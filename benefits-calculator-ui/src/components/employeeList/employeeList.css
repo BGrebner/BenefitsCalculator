@@ -1,0 +1,23 @@
+.centered {
+    text-align: center;
+}
+
+.float-right {
+    float: right;
+}
+
+#employeeList {
+    margin: 0 2rem;
+}
+
+.employeeListTable {
+    margin-bottom: 2rem;
+}
+
+tr:nth-child(even){
+    background-color: #f2f2f2;
+}
+
+thead {
+    background-color: darkgrey;
+}
