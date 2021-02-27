@@ -6,7 +6,9 @@ import Employee from "../../models/Employee";
 afterEach(cleanup);
 
 function renderEmployeeList(args?: any) { 
-    let defaultProps = {}; 
+    let defaultProps = {
+        employees: []
+    }; 
  
     const props = {...defaultProps, ...args}; 
     return render(<EmployeeList {...props} />); 
@@ -28,13 +30,13 @@ it('contains employee table', () => {
 
 it('lists employees', () => {
     const employees: Array<Employee> = [
-        {firstName: "Luke", lastName: "Skywalker"},
-        {firstName: "Hans", lastName: "Solo"}
+        {id: 1, firstName: "Luke", lastName: "Skywalker"},
+        {id: 2, firstName: "Hans", lastName: "Solo"}
     ];
 
-    const {getByText} = renderEmployeeList(employees);
+    const {getByText} = renderEmployeeList({employees: employees});
     getByText(employees[0].firstName);
     getByText(employees[0].lastName);
     getByText(employees[1].firstName);
-    getByText(employees[2].lastName);
+    getByText(employees[1].lastName);
 });
