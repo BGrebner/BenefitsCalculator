@@ -22,5 +22,5 @@ it('contains employee table', () => {
 
     getByText("First Name");
     getByText("Last Name");
-    getByText("Show Dependents");
+    getByText("Show Dependents")
 })
