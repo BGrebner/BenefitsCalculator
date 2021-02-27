@@ -8,7 +8,7 @@ import "./employeeList.css";
 
 
 const EmployeeList: React.FC<{employees: Array<Employee>}> = ({employees}) => (
-    <div id="employeeList">
+    <div>
         <h1 className="centered">Employees</h1>
         <TableContainer className="employeeListTable" component={Paper}>
             <Table size="small" aria-label="employees">

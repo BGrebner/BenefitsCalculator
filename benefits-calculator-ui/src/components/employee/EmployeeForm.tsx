@@ -1,5 +1,6 @@
 import { TextField } from "@material-ui/core";
 import React from "react";
+import "./employeeForm.css";
 
 const EmployeeForm = () => (
     <form noValidate autoComplete="off">
