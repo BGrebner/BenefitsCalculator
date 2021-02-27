@@ -1,3 +1,11 @@
 .centered {
     text-align: center;
 }
+
+.float-right {
+    float: right;
+}
+
+#employeeList {
+    margin: 0 2rem;
+}
