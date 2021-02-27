@@ -16,3 +16,11 @@ it('contains add employee button', () => {
 
     getByText("Add Employee");
 });
+
+it('contains employee table', () => {
+    const { getByText } = renderEmployeeList();
+
+    getByText("First Name");
+    getByText("Last Name");
+    getByText("Show Dependents");
+})
