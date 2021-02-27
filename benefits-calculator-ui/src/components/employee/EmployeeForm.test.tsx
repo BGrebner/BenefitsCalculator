@@ -1,12 +1,15 @@
 import React from "react"; 
 import {cleanup, render} from "@testing-library/react"; 
 import EmployeeForm from "./EmployeeForm";
+import Employee from "../../models/Employee";
+import Person from "../../models/Person";
 
  
 afterEach(cleanup);
 
 function renderEmployeeForm(args?: any) { 
     let defaultProps = {
+        employee: {}
     }; 
  
     const props = {...defaultProps, ...args}; 
@@ -17,4 +20,25 @@ it('contains add dependent button', () => {
     const { getByText } = renderEmployeeForm();
 
     getByText("Add Dependent");
+});
+
+it('maintains state', () => {
+    const dependents: Array<Person> = [
+        {firstName: "Luke", lastName: "Skywalker"},
+        {firstName: "Leia", lastName: "Organa"}
+    ];
+    const currentState: Employee = {
+        firstName: "Darth",
+        lastName: "Vader",
+        dependents: dependents
+    };
+
+    const { getByText } = renderEmployeeForm({employee: currentState});
+
+    getByText(currentState.firstName);
+    getByText(currentState.lastName);
+    getByText(dependents[0].firstName);
+    getByText(dependents[0].lastName);
+    getByText(dependents[1].firstName);
+    getByText(dependents[1].lastName);
 });
