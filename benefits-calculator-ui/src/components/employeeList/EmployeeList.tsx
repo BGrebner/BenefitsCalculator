@@ -2,12 +2,13 @@ import { Button, TableContainer, TableBody, TableRow, TableCell, Table, TableHea
 import { Paper } from '@material-ui/core';
 import { Contacts } from "@material-ui/icons";
 import React from "react";
+import { Link } from "react-router-dom";
 import Employee from "../../models/Employee";
 import "./employeeList.css";
 
 
 const EmployeeList: React.FC<{employees: Array<Employee>}> = ({employees}) => (
-    <div id="employeeList">
+    <div>
         <h1 className="centered">Employees</h1>
         <TableContainer className="employeeListTable" component={Paper}>
             <Table size="small" aria-label="employees">
@@ -34,7 +35,9 @@ const EmployeeList: React.FC<{employees: Array<Employee>}> = ({employees}) => (
             </Table>
         </TableContainer>
 
-        <Button className="float-right" variant="contained" color="primary">Add Employee</Button>
+        <Link to={"/employee"}>
+            <Button className="float-right" variant="contained" color="primary">Add Employee</Button>
+        </Link>                    
     </div>
 );
 

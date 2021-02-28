@@ -2,6 +2,7 @@ import React from "react";
 import {cleanup, render} from "@testing-library/react"; 
 import EmployeeList from "./EmployeeList"; 
 import Employee from "../../models/Employee";
+import { MemoryRouter } from "react-router-dom";
  
 afterEach(cleanup);
 
@@ -11,7 +12,10 @@ function renderEmployeeList(args?: any) {
     }; 
  
     const props = {...defaultProps, ...args}; 
-    return render(<EmployeeList {...props} />); 
+    return render(
+        <MemoryRouter>
+            <EmployeeList {...props} />
+        </MemoryRouter>); 
 }
 
 it('contains add employee button', () => {
