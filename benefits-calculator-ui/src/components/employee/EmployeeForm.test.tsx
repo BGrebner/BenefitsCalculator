@@ -114,9 +114,9 @@ describe('benefits preview', () => {
     });
 
     it('should hide benefits preview when 0', () => {
-        const {getByText} = renderEmployeeForm({benefitCostPreview: 0});
+        const {queryByText} = renderEmployeeForm({benefitCostPreview: 0});
     
-        const element = getByText("Benefit Cost Preview: $2000");
+        const element = queryByText("Benefit Cost Preview: $0");
         
         expect(element).not.toBeInTheDocument();
     });

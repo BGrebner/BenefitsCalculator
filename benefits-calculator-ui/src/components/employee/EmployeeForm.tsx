@@ -82,9 +82,12 @@ export const EmployeeForm: React.FC<{employee: Employee, benefitCostPreview: num
             </Table>
         </TableContainer>
 
-        <div id="benefitPreview">
-            <p>Benefit Cost Preview: {`$${benefitCostPreview}`}</p>
-        </div>
+        {
+            benefitCostPreview > 0 &&
+            (<div id="benefitPreview">
+                <p>Benefit Cost Preview: {`$${benefitCostPreview}`}</p>
+            </div>)
+        }
     </form>
 )};
 
