@@ -1,6 +1,6 @@
 import React from "react"; 
-import {cleanup, fireEvent, getByDisplayValue, render} from "@testing-library/react"; 
-import EmployeeForm from "./EmployeeForm";
+import {cleanup, fireEvent, render} from "@testing-library/react"; 
+import { EmployeeForm } from "./EmployeeForm";
 import Employee from "../../models/Employee";
 import Person from "../../models/Person";
 
@@ -37,10 +37,10 @@ it('should maintain state', () => {
 
 describe('updating employee state', () => {
     it('should update employee first name', () => {
-        const { getByLabelText } = renderEmployeeForm();
+        const { getByTestId } = renderEmployeeForm();
         const expectedFirstName = "Anakin";
 
-        const input = getByLabelText("First Name") as HTMLInputElement;
+        const input = getByTestId("firstName") as HTMLInputElement;
 
         fireEvent.change(input, { target: { value: expectedFirstName}});
 
@@ -48,10 +48,10 @@ describe('updating employee state', () => {
     });
 
     it('should update employee last name', () => {
-        const { getByLabelText } = renderEmployeeForm();
+        const { getByTestId } = renderEmployeeForm();
         const expectedLastName = "Skywalker";
 
-        const input = getByLabelText("Last Name") as HTMLInputElement;
+        const input = getByTestId("lastName") as HTMLInputElement;
 
         fireEvent.change(input, { target: { value: expectedLastName}});
 

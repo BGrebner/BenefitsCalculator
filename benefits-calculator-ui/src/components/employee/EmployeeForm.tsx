@@ -1,19 +1,30 @@
 import { Button, TextField, Table, TableContainer, TableBody, TableRow, TableCell, TableHead } from "@material-ui/core";
 import { Paper } from '@material-ui/core';
-import React, { useState } from "react";
+import React, { ChangeEvent, useState } from "react";
+import { connect } from "react-redux";
 import Employee from "../../models/Employee";
+import Person from "../../models/Person";
 import "./employeeForm.css";
 
 
-const EmployeeForm: React.FC<{employee: Employee}> = ({employee}) => {
-    const [employeeState, setEmployee] = useState({...employee});
+export const EmployeeForm: React.FC<{employee: Employee}> = ({employee: initialEmployee}) => {
+    const [employee, setEmployee] = useState({...initialEmployee});
+
+    const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
+        const {name, value} = event.target;
+
+        setEmployee(previousEmployee => ({
+            ...previousEmployee,
+            [name]: value
+        }));
+    }
 
     return (
     <form noValidate autoComplete="off">
         <h2>New Employee</h2>
         <div className="employeeInfo">
-            <TextField label="First Name" value={employeeState.firstName} />
-            <TextField label="Last Name" value={employeeState.lastName}/>
+            <TextField inputProps={{"data-testid": "firstName"}} name="firstName" label="First Name" onChange={handleChange} value={employee.firstName} />
+            <TextField inputProps={{"data-testid": "lastName"}} name="lastName" label="Last Name" onChange={handleChange} value={employee.lastName}/>
         </div>
         <br/>
         <TableContainer className="dependentsTable" component={Paper}>
@@ -27,8 +38,8 @@ const EmployeeForm: React.FC<{employee: Employee}> = ({employee}) => {
                     </TableRow>
                 </TableHead>
                 <TableBody>
-                    {employeeState.dependents?.map((dependent) => (
-                        <TableRow>
+                    {employee.dependents?.map((dependent, index) => (
+                        <TableRow key={index}>
                             <TableCell>
                                 <TextField label="First Name" value={dependent.firstName} />
                             </TableCell>
@@ -47,4 +58,14 @@ const EmployeeForm: React.FC<{employee: Employee}> = ({employee}) => {
     </form>
 )};
 
-export default EmployeeForm
+function mapStateToProps(state: any) {
+    return {
+        employee: {
+            firstName: "",
+            lastName: "",
+            dependents: [] as Array<Person>
+        }
+    }
+}
+
+export default connect(mapStateToProps)(EmployeeForm);
