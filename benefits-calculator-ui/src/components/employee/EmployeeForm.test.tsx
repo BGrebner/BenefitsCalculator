@@ -8,7 +8,11 @@ afterEach(cleanup);
 
 function renderEmployeeForm(args?: any) { 
     let defaultProps = {
-        employee: {}
+        employee: {
+            firstName: "",
+            lastName: "",
+            dependents: []
+        }
     }; 
  
     const props = {...defaultProps, ...args}; 
@@ -23,7 +27,7 @@ it('should contain add dependent button', () => {
 
 it('should maintain state', () => {
     const currentState: Employee = createInitialState();
-    const dependents: Array<Person> = currentState.dependents || [];
+    const dependents: Array<Person> = currentState.dependents;
 
     const { getByDisplayValue } = renderEmployeeForm({employee: currentState});
 
@@ -61,17 +65,17 @@ describe('updating employee state', () => {
 
 describe('dependents', () => {
     it('should add blank dependent when clicking add dependent', () => {
-        const { getByRole, getByTestId } = renderEmployeeForm();
+        const { getByText, getByTestId } = renderEmployeeForm();
 
-        const addDependentButton = getByRole("button", {name: /addDependent/i});
+        const addDependentButton = getByText("Add Dependent");
 
         fireEvent.click(addDependentButton);
 
-        const actualFirstName = getByTestId("dependent0FirstName").nodeValue;
-        const actualLastName = getByTestId("dependent0LastName").nodeValue;
+        const firstNameInput = getByTestId("dependent0FirstName") as HTMLInputElement;
+        const lastNameInput = getByTestId("dependent0LastName") as HTMLInputElement;
 
-        expect(actualFirstName).toBe("");
-        expect(actualLastName).toBe("");
+        expect(firstNameInput.value).toBe("");
+        expect(lastNameInput.value).toBe("");
     });
 });
 
