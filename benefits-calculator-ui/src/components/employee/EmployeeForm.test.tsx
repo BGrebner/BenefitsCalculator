@@ -77,6 +77,32 @@ describe('dependents', () => {
         expect(firstNameInput.value).toBe("");
         expect(lastNameInput.value).toBe("");
     });
+
+    it('should update dependent first name', () => {
+        const initialState = createInitialState();
+        const expectedFirstName = "Jedi"
+
+        const { getByTestId } = renderEmployeeForm(initialState);
+
+        const input = getByTestId("dependent0FirstName") as HTMLInputElement;
+
+        fireEvent.change(input, { target: { value: expectedFirstName}});
+
+        expect(input.value).toBe(expectedFirstName);
+    });
+
+    it('should update dependent last name', () => {
+        const initialState = createInitialState();
+        const expectedLastName = "Master";
+
+        const { getByTestId } = renderEmployeeForm(initialState);
+
+        const input = getByTestId("dependent0LastName") as HTMLInputElement;
+
+        fireEvent.change(input, { target: { value: expectedLastName}});
+
+        expect(input.value).toBe(expectedLastName);
+    });
 });
 
 const createInitialState: () => Employee = () => {
