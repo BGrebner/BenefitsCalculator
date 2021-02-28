@@ -10,3 +10,7 @@ form .dependentsTable {
     max-width: 60rem;
     margin: 2rem 0;
 }
+
+#benefitPreview {
+    font-size: medium;
+}

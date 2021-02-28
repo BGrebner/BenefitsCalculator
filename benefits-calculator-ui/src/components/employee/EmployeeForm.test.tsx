@@ -12,7 +12,8 @@ function renderEmployeeForm(args?: any) {
             firstName: "",
             lastName: "",
             dependents: []
-        }
+        },
+        benefitCostPreview: 0
     }; 
  
     const props = {...defaultProps, ...args}; 
@@ -108,7 +109,7 @@ describe('dependents', () => {
 it('should show cost preview', () => {
     const {getByText} = renderEmployeeForm({benefitCostPreview: 2000});
 
-    getByText("$2000");
+    getByText("Benefit Cost Preview: $2000");
 });
 
 const createInitialState: () => Employee = () => {

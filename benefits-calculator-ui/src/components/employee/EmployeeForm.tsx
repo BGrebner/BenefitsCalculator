@@ -7,7 +7,7 @@ import Person from "../../models/Person";
 import "./employeeForm.css";
 
 
-export const EmployeeForm: React.FC<{employee: Employee}> = ({employee: initialEmployee}) => {
+export const EmployeeForm: React.FC<{employee: Employee, benefitCostPreview: number}> = ({employee: initialEmployee, benefitCostPreview}) => {
     const [employee, setEmployee] = useState({...initialEmployee});
 
     const handleEmployeeChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -81,6 +81,10 @@ export const EmployeeForm: React.FC<{employee: Employee}> = ({employee: initialE
                 </TableBody>    
             </Table>
         </TableContainer>
+
+        <div id="benefitPreview">
+            <p>Benefit Cost Preview: {`$${benefitCostPreview}`}</p>
+        </div>
     </form>
 )};
 
@@ -90,7 +94,8 @@ function mapStateToProps(state: any) {
             firstName: "",
             lastName: "",
             dependents: [] as Array<Person>
-        }
+        },
+        benefitCostPreview: 0
     }
 }
 
