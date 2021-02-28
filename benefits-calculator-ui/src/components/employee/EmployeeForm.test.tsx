@@ -105,6 +105,12 @@ describe('dependents', () => {
     });
 });
 
+it('should show cost preview', () => {
+    const {getByText} = renderEmployeeForm({benefitCostPreview: 2000});
+
+    getByText("$2000");
+});
+
 const createInitialState: () => Employee = () => {
     const dependents: Array<Person> = [
         {firstName: "Luke", lastName: "Skywalker"},
