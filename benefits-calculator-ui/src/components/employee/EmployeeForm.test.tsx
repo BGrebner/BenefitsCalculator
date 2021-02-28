@@ -106,10 +106,20 @@ describe('dependents', () => {
     });
 });
 
-it('should show cost preview', () => {
-    const {getByText} = renderEmployeeForm({benefitCostPreview: 2000});
+describe('benefits preview', () => {
+    it('should show cost preview', () => {
+        const {getByText} = renderEmployeeForm({benefitCostPreview: 2000});
+    
+        getByText("Benefit Cost Preview: $2000");
+    });
 
-    getByText("Benefit Cost Preview: $2000");
+    it('should hide benefits preview when 0', () => {
+        const {getByText} = renderEmployeeForm({benefitCostPreview: 0});
+    
+        const element = getByText("Benefit Cost Preview: $2000");
+        
+        expect(element).not.toBeInTheDocument();
+    });
 });
 
 const createInitialState: () => Employee = () => {
