@@ -82,7 +82,7 @@ describe('dependents', () => {
         const initialState = createInitialState();
         const expectedFirstName = "Jedi"
 
-        const { getByTestId } = renderEmployeeForm(initialState);
+        const { getByTestId } = renderEmployeeForm({employee: initialState});
 
         const input = getByTestId("dependent0FirstName") as HTMLInputElement;
 
@@ -95,7 +95,7 @@ describe('dependents', () => {
         const initialState = createInitialState();
         const expectedLastName = "Master";
 
-        const { getByTestId } = renderEmployeeForm(initialState);
+        const { getByTestId } = renderEmployeeForm({employee: initialState});
 
         const input = getByTestId("dependent0LastName") as HTMLInputElement;
 

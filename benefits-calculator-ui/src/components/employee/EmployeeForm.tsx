@@ -10,13 +10,28 @@ import "./employeeForm.css";
 export const EmployeeForm: React.FC<{employee: Employee}> = ({employee: initialEmployee}) => {
     const [employee, setEmployee] = useState({...initialEmployee});
 
-    const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const handleEmployeeChange = (event: ChangeEvent<HTMLInputElement>) => {
         const {name, value} = event.target;
 
         setEmployee(previousEmployee => ({
             ...previousEmployee,
             [name]: value
         }));
+    }
+
+    const handleDependentChange = (event: ChangeEvent<HTMLInputElement>, index: number) => {
+        const {name, value} = event.target;
+
+        setEmployee(previousEmployee => {
+            const numberOfDependents = previousEmployee.dependents.length;
+            const newDependent = {...previousEmployee.dependents[index], [name]: value};
+            const newDependents = [...previousEmployee.dependents.slice(0, index), newDependent, ...previousEmployee.dependents.slice(index + 1, numberOfDependents - index)]
+            
+            return ({
+                ...previousEmployee,
+                dependents: newDependents
+            });
+        });
     }
 
     const handleAddDependent = () => {
@@ -34,8 +49,8 @@ export const EmployeeForm: React.FC<{employee: Employee}> = ({employee: initialE
     <form noValidate autoComplete="off">
         <h2>New Employee</h2>
         <div className="employeeInfo">
-            <TextField inputProps={{"data-testid": "firstName"}} name="firstName" label="First Name" onChange={handleChange} value={employee.firstName} />
-            <TextField inputProps={{"data-testid": "lastName"}} name="lastName" label="Last Name" onChange={handleChange} value={employee.lastName}/>
+            <TextField inputProps={{"data-testid": "firstName"}} name="firstName" label="First Name" onChange={handleEmployeeChange} value={employee.firstName} />
+            <TextField inputProps={{"data-testid": "lastName"}} name="lastName" label="Last Name" onChange={handleEmployeeChange} value={employee.lastName}/>
         </div>
         <br/>
         <TableContainer className="dependentsTable" component={Paper}>
@@ -52,10 +67,10 @@ export const EmployeeForm: React.FC<{employee: Employee}> = ({employee: initialE
                     {employee.dependents.map((dependent, index) => (
                         <TableRow key={index}>
                             <TableCell>
-                                <TextField inputProps={{"data-testid": `dependent${index}FirstName`}} label="First Name" value={dependent.firstName} />
+                                <TextField inputProps={{"data-testid": `dependent${index}FirstName`}} name="firstName" label="First Name" onChange={(e: ChangeEvent<HTMLInputElement>) => handleDependentChange(e, index)} value={dependent.firstName} />
                             </TableCell>
                             <TableCell>
-                                <TextField inputProps={{"data-testid": `dependent${index}LastName`}} label="Last Name" value={dependent.lastName} />
+                                <TextField inputProps={{"data-testid": `dependent${index}LastName`}} name="lastName" label="Last Name" onChange={(e: ChangeEvent<HTMLInputElement>) => handleDependentChange(e, index)} value={dependent.lastName} />
                             </TableCell>
                         </TableRow>
                     ))}
