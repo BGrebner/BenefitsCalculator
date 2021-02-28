@@ -33,12 +33,12 @@ it('maintains state', () => {
         dependents: dependents
     };
 
-    const { getByText } = renderEmployeeForm({employee: currentState});
+    const { getByDisplayValue } = renderEmployeeForm({employee: currentState});
 
-    getByText(currentState.firstName);
-    getByText(currentState.lastName);
-    getByText(dependents[0].firstName);
-    getByText(dependents[0].lastName);
-    getByText(dependents[1].firstName);
-    getByText(dependents[1].lastName);
+    getByDisplayValue(currentState.firstName);
+    getByDisplayValue(currentState.lastName);
+    getByDisplayValue(dependents[0].firstName);
+    getByDisplayValue(dependents[0].lastName);
+    getByDisplayValue(dependents[1].firstName);
+    getByDisplayValue(dependents[1].lastName);
 });
