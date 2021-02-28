@@ -19,6 +19,17 @@ export const EmployeeForm: React.FC<{employee: Employee}> = ({employee: initialE
         }));
     }
 
+    const handleAddDependent = () => {
+        setEmployee(previousEmployee => {
+            const newDependents = [...previousEmployee.dependents, {firstName: "", lastName: ""}];
+            return ({
+                ...previousEmployee,
+                dependents: newDependents
+            });
+        });
+    }
+
+
     return (
     <form noValidate autoComplete="off">
         <h2>New Employee</h2>
@@ -38,7 +49,7 @@ export const EmployeeForm: React.FC<{employee: Employee}> = ({employee: initialE
                     </TableRow>
                 </TableHead>
                 <TableBody>
-                    {employee.dependents?.map((dependent, index) => (
+                    {employee.dependents.map((dependent, index) => (
                         <TableRow key={index}>
                             <TableCell>
                                 <TextField inputProps={{"data-testid": `dependent${index}FirstName`}} label="First Name" value={dependent.firstName} />
@@ -50,7 +61,7 @@ export const EmployeeForm: React.FC<{employee: Employee}> = ({employee: initialE
                     ))}
                     <TableRow>
                         <TableCell></TableCell>
-                        <TableCell align="right"><Button variant="contained" color="primary" name="addDependent">Add Dependent</Button></TableCell>
+                        <TableCell align="right"><Button variant="contained" color="primary" name="addDependent" onClick={handleAddDependent}>Add Dependent</Button></TableCell>
                     </TableRow>
                 </TableBody>    
             </Table>
