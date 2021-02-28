@@ -41,16 +41,16 @@ export const EmployeeForm: React.FC<{employee: Employee}> = ({employee: initialE
                     {employee.dependents?.map((dependent, index) => (
                         <TableRow key={index}>
                             <TableCell>
-                                <TextField label="First Name" value={dependent.firstName} />
+                                <TextField inputProps={{"data-testid": `dependent${index}FirstName`}} label="First Name" value={dependent.firstName} />
                             </TableCell>
                             <TableCell>
-                                <TextField label="Last Name" value={dependent.lastName} />
+                                <TextField inputProps={{"data-testid": `dependent${index}LastName`}} label="Last Name" value={dependent.lastName} />
                             </TableCell>
                         </TableRow>
                     ))}
                     <TableRow>
                         <TableCell></TableCell>
-                        <TableCell align="right"><Button variant="contained" color="primary">Add Dependent</Button></TableCell>
+                        <TableCell align="right"><Button variant="contained" color="primary" name="addDependent">Add Dependent</Button></TableCell>
                     </TableRow>
                 </TableBody>    
             </Table>

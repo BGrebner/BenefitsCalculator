@@ -57,7 +57,23 @@ describe('updating employee state', () => {
 
         expect(input.value).toBe(expectedLastName);
     });
-})
+});
+
+describe('dependents', () => {
+    it('should add blank dependent when clicking add dependent', () => {
+        const { getByRole, getByTestId } = renderEmployeeForm();
+
+        const addDependentButton = getByRole("button", {name: /addDependent/i});
+
+        fireEvent.click(addDependentButton);
+
+        const actualFirstName = getByTestId("dependent0FirstName").nodeValue;
+        const actualLastName = getByTestId("dependent0LastName").nodeValue;
+
+        expect(actualFirstName).toBe("");
+        expect(actualLastName).toBe("");
+    });
+});
 
 const createInitialState: () => Employee = () => {
     const dependents: Array<Person> = [
