@@ -130,25 +130,24 @@ describe('submitting form', () => {
     });
 
     it('should display errors on submit if invalid', () => {
-        const invalidEmployee: Employee = {firstName: "", lastName: "", dependents: [
+        const invalidEmployee: Employee = {firstName: "A Name", lastName: "", dependents: [
             {firstName: "", lastName: ""}
         ]};
 
-        const {getByText, getByTestId} = renderEmployeeForm({employee: invalidEmployee});
+        const {getByText, getByTestId, getAllByText} = renderEmployeeForm({employee: invalidEmployee});
 
         const firstNameInput = getByTestId("firstName") as HTMLInputElement;
-        const lastNameInput = getByTestId("lastName") as HTMLInputElement;
-        const dependentFirstNameInput = getByTestId("dependent0FirstName") as HTMLInputElement;
-        const dependentLastNameInput = getByTestId("dependent0LastName") as HTMLInputElement;
+        fireEvent.change(firstNameInput, { target: {value: ""}});
 
         const submitButton = getByText("Submit");
         fireEvent.click(submitButton);
 
+        const firstNameLabels = getAllByText("First Name");
+        const lastNameLabels = getAllByText("Last Name");
+
         
-        expect(firstNameInput).toHaveAttribute("error");
-        expect(lastNameInput).toHaveAttribute("error");
-        expect(dependentFirstNameInput).toHaveAttribute("error");
-        expect(dependentLastNameInput).toHaveAttribute("error");
+        firstNameLabels.forEach(label => expect(label).toHaveClass('Mui-error'));
+        lastNameLabels.forEach(label => expect(label).toHaveClass('Mui-error'));
         getByText("All name fields must be entered to submit.");
     });
 });

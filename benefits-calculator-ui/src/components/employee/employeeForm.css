@@ -22,3 +22,8 @@ form {
 #addEmployee {
     float: right;
 }
+
+.error-message {
+    color: red;
+    float: right;
+}
