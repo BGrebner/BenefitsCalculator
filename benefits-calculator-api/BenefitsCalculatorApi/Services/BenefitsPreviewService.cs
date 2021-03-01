@@ -12,7 +12,7 @@ namespace BenefitsCalculatorApi.Services
     {
         public decimal CalculateBenefitsCost(Employee employee)
         {
-            throw new NotImplementedException();
+            return 1000;
         }
     }
 }
