@@ -29,7 +29,7 @@ namespace BenefitsCalculatorApi.Controllers
         [HttpPost("Employee")]
         public async Task<Employee> Create(Employee employee)
         {
-            throw new NotImplementedException();
+            return await _employeeRepository.CreateEmployee(employee);
         }
     }
 }
