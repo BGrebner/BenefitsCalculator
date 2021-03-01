@@ -1,5 +1,7 @@
-﻿using BenefitsCalculatorApi.Models;
-using System;
+﻿using BenefitsCalculatorApi.Database;
+using BenefitsCalculatorApi.Models;
+using Dapper;
+using Microsoft.Data.Sqlite;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -13,9 +15,15 @@ namespace BenefitsCalculatorApi.Repositories
 
     public class EmployeeRepository : IEmployeeRepository
     {
-        public Task<IEnumerable<Employee>> GetEmployees()
+        private readonly DatabaseConfig _config;
+
+        public EmployeeRepository(DatabaseConfig config) => _config = config;
+
+        public async Task<IEnumerable<Employee>> GetEmployees()
         {
-            throw new NotImplementedException();
+            using var connection = new SqliteConnection(_config.Name);
+
+            return await connection.QueryAsync<Employee>("Select Id, FirstName, LastName FROM Employees;");
         }
     }
 }
