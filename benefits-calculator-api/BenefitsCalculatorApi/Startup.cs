@@ -26,7 +26,7 @@ namespace BenefitsCalculatorApi
             services.AddSingleton(new DatabaseConfig { Name = Configuration["DatabaseName"] });
             services.AddSingleton<IDatabaseBootstrap, DatabaseBootstrap>();
             services.AddSingleton<IEmployeeRepository, EmployeeRepository>();
-
+            services.AddSingleton<IDependentRepository, DependentRepository >();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

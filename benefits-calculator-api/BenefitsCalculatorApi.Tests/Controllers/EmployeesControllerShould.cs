@@ -36,6 +36,21 @@ namespace BenefitsCalculatorApi.Tests
 
             actualEmployees.Should().BeEquivalentTo(expectedEmployees);
         } 
-        
+
+        [Fact]
+        public void BeAPost() => controller.Should().BePost(nameof(controller.Create), "Employee");
+
+        [Fact]
+        public async Task ReturnCreatedEmployee()
+        {
+            var employeeToSave = A.Dummy<Employee>();
+            var expectedEmployee = A.Dummy<Employee>();
+
+            A.CallTo(() => employeeRepository.CreateEmployee(employeeToSave)).Returns(expectedEmployee);
+
+            var actualEmployee = await controller.Create(employeeToSave);
+
+            actualEmployee.Should().Be(expectedEmployee);
+        }
     }
 }

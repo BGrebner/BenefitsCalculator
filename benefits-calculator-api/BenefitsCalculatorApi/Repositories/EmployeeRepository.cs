@@ -11,19 +11,39 @@ namespace BenefitsCalculatorApi.Repositories
     public interface IEmployeeRepository
     {
         Task<IEnumerable<Employee>> GetEmployees();
+
+        Task<Employee> CreateEmployee(Employee employee);
     }
 
     public class EmployeeRepository : IEmployeeRepository
     {
         private readonly DatabaseConfig _config;
+        private readonly IDependentRepository _dependentRepository;
 
-        public EmployeeRepository(DatabaseConfig config) => _config = config;
+        public EmployeeRepository(DatabaseConfig config, IDependentRepository dependentRepository)
+        {
+            _config = config;
+            _dependentRepository = dependentRepository;
+        }
 
         public async Task<IEnumerable<Employee>> GetEmployees()
         {
             using var connection = new SqliteConnection(_config.Name);
 
             return await connection.QueryAsync<Employee>("Select Id, FirstName, LastName FROM Employees;");
+        }
+
+        public async Task<Employee> CreateEmployee(Employee employee)
+        {
+            using var connection = new SqliteConnection(_config.Name);
+
+            var newEmployee = await connection.QuerySingleAsync<Employee>("INSERT INTO Employees (FirstName, LastName) VALUES (@FirstName, @LastName); SELECT last_insert_rowid() AS Id, @FirstName AS FirstName, @LastName AS LastName", employee);
+
+            var dependentSaveTasks = employee.Dependents?.Select(dependent => _dependentRepository.CreateDependent(dependent, (int)newEmployee.Id));
+
+            newEmployee.Dependents = (await Task.WhenAll(dependentSaveTasks)).ToList();
+
+            return newEmployee;
         }
     }
 }

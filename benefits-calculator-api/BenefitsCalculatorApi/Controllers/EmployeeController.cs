@@ -25,5 +25,11 @@ namespace BenefitsCalculatorApi.Controllers
         {
             return await _employeeRepository.GetEmployees();
         }
+
+        [HttpPost("Employee")]
+        public async Task<Employee> Create(Employee employee)
+        {
+            return await _employeeRepository.CreateEmployee(employee);
+        }
     }
 }
