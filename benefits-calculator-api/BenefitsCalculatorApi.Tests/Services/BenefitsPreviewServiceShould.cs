@@ -29,5 +29,17 @@ namespace BenefitsCalculatorApi.Tests.Services
 
             actualCost.Should().Be(1000);
         }
+
+        [Theory]
+        [InlineData("Jonathan", "Archer")]
+        [InlineData("Alexander", "Rozhenko")]
+        public void CalculateDiscountedEmployeeCostBasedBeginningWithA(string firstName, string lastName)
+        {
+            var employee = new Employee { FirstName = firstName, LastName = lastName, Dependents = new List<Dependent>() };
+
+            var actualCost = benefitsPreviewService.CalculateBenefitsCost(employee);
+
+            actualCost.Should().Be(900);
+        }
     }
 }
