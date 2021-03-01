@@ -36,6 +36,9 @@ namespace BenefitsCalculatorApi.Tests
 
             actualEmployees.Should().BeEquivalentTo(expectedEmployees);
         } 
-        
+
+        [Fact]
+        public void BeAPost() => controller.Should().BePost(nameof(controller.Create), "Employee");
+
     }
 }

@@ -25,5 +25,10 @@ namespace BenefitsCalculatorApi.Controllers
         {
             return await _employeeRepository.GetEmployees();
         }
+
+        public async Task<Employee> Create(Employee employee)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
