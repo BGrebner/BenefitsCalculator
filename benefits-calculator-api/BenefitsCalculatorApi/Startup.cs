@@ -1,8 +1,11 @@
+using BenefitsCalculatorApi.Database;
+using BenefitsCalculatorApi.Repositories;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using System;
 
 namespace BenefitsCalculatorApi
 {
@@ -19,10 +22,15 @@ namespace BenefitsCalculatorApi
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+
+            services.AddSingleton(new DatabaseConfig { Name = Configuration["DatabaseName"] });
+            services.AddSingleton<IDatabaseBootstrap, DatabaseBootstrap>();
+            services.AddSingleton<IEmployeeRepository, EmployeeRepository>();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IServiceProvider serviceProvider)
         {
             if (env.IsDevelopment())
             {
@@ -39,6 +47,8 @@ namespace BenefitsCalculatorApi
             {
                 endpoints.MapControllers();
             });
+
+            serviceProvider.GetService<IDatabaseBootstrap>().Setup();
         }
     }
 }
