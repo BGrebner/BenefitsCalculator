@@ -11,6 +11,8 @@ namespace BenefitsCalculatorApi.Repositories
     public interface IEmployeeRepository
     {
         Task<IEnumerable<Employee>> GetEmployees();
+
+        Task<Employee> CreateEmployee(Employee employee);
     }
 
     public class EmployeeRepository : IEmployeeRepository
@@ -24,6 +26,13 @@ namespace BenefitsCalculatorApi.Repositories
             using var connection = new SqliteConnection(_config.Name);
 
             return await connection.QueryAsync<Employee>("Select Id, FirstName, LastName FROM Employees;");
+        }
+
+        public async Task<Employee> CreateEmployee(Employee employee)
+        {
+            using var connection = new SqliteConnection(_config.Name);
+
+            return await connection.QuerySingleAsync<Employee>("INSERT INTO Employees (FirstName, LastName) OUTPUT INSERTED.I* VALUES (@FirstName, @LastName)", employee);
         }
     }
 }
