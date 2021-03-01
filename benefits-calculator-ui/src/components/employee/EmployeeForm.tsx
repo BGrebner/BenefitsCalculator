@@ -14,6 +14,11 @@ export const EmployeeForm: React.FC<{employee: Employee, benefitCostPreview: num
     const handleEmployeeChange = (event: ChangeEvent<HTMLInputElement>) => {
         const {name, value} = event.target;
 
+        if(value !== "") setErrors((previousError: any) => ({
+            ...previousError,
+            [name]: undefined
+        }));
+
         setEmployee(previousEmployee => ({
             ...previousEmployee,
             [name]: value

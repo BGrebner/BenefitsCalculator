@@ -154,7 +154,7 @@ describe('submitting form', () => {
 
     describe("removing errors", () => {
         it("should remove error from employee first name", () => {
-            const {getByText, getByTestId} = renderEmployeeForm({employee: createInitialState()});
+            const {getByText, getByTestId, getAllByText} = renderEmployeeForm({employee: createInitialState()});
 
             const firstNameInput = getByTestId("firstName") as HTMLInputElement;
             fireEvent.change(firstNameInput, { target: {value: ""}});
@@ -164,9 +164,9 @@ describe('submitting form', () => {
 
             fireEvent.change(firstNameInput, { target: {value: "ok value"}});
 
-            const firstNameLabel = getByText("First Name");
+            const firstNameLabels = getAllByText("First Name");
 
-            expect(firstNameLabel).not.toHaveClass('.Mui-error');
+            expect(firstNameLabels[0]).not.toHaveClass('.Mui-error');
         });
     })
 });
