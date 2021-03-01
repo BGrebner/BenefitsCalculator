@@ -14,10 +14,7 @@ export const EmployeeForm: React.FC<{employee: Employee, benefitCostPreview: num
     const handleEmployeeChange = (event: ChangeEvent<HTMLInputElement>) => {
         const {name, value} = event.target;
 
-        if(value !== "") setErrors((previousError: any) => ({
-            ...previousError,
-            [name]: undefined
-        }));
+        resetErrors(name, value);
 
         setEmployee(previousEmployee => ({
             ...previousEmployee,
@@ -27,6 +24,8 @@ export const EmployeeForm: React.FC<{employee: Employee, benefitCostPreview: num
 
     const handleDependentChange = (event: ChangeEvent<HTMLInputElement>, index: number) => {
         const {name, value} = event.target;
+
+        resetErrors(`dependent${index}${name[0].toUpperCase() + name.substring(1)}`, value);
 
         setEmployee(previousEmployee => {
             const numberOfDependents = previousEmployee.dependents.length;
@@ -62,6 +61,14 @@ export const EmployeeForm: React.FC<{employee: Employee, benefitCostPreview: num
         setErrors(currentErrors);
 
         return Object.keys(currentErrors).length === 0;
+    }
+
+    const resetErrors = (name: string, value: string) => {
+        if(value !== "") setErrors((previousErrors: any) => {
+            const newErrors = {...previousErrors};
+            delete newErrors[name];
+            return newErrors;
+        });
     }
 
     const handleSubmit = (event: FormEvent<HTMLFormElement>) => {

@@ -4,6 +4,7 @@ import { EmployeeForm } from "./EmployeeForm";
 import Employee from "../../models/Employee";
 import Person from "../../models/Person";
 import { create } from "domain";
+import { isAsExpression } from "typescript";
 
 afterEach(cleanup);
 
@@ -181,6 +182,22 @@ describe('submitting form', () => {
             const lastNameLabels = getAllByText("Last Name");
 
             expect(lastNameLabels[0]).not.toHaveClass('.Mui-error');
+        });
+
+        it("should remove error from dependent first name", () => {
+            const getAllByText = setup('dependent0FirstName');
+            
+            const firstNameLabels = getAllByText("First Name");
+
+            expect(firstNameLabels[1]).not.toHaveClass('.Mui-error');
+        });
+
+        it("should remove error from dependent last name", () => {
+            const getAllByText = setup('dependent0LastName');
+            
+            const lastNameLabels = getAllByText("Last Name");
+
+            expect(lastNameLabels[1]).not.toHaveClass('.Mui-error');
         });
     })
 });
