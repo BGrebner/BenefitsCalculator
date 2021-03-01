@@ -11,6 +11,19 @@ form .dependentsTable {
     margin: 2rem 0;
 }
 
+form {
+    max-width: 70rem;
+}
+
 #benefitPreview {
     font-size: medium;
+}
+
+#addEmployee {
+    float: right;
+}
+
+.error-message {
+    color: red;
+    float: right;
 }

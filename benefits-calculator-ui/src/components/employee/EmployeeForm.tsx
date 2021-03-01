@@ -1,6 +1,6 @@
 import { Button, TextField, Table, TableContainer, TableBody, TableRow, TableCell, TableHead } from "@material-ui/core";
 import { Paper } from '@material-ui/core';
-import React, { ChangeEvent, useState } from "react";
+import React, { ChangeEvent, FormEvent, useState } from "react";
 import { connect } from "react-redux";
 import Employee from "../../models/Employee";
 import Person from "../../models/Person";
@@ -9,9 +9,12 @@ import "./employeeForm.css";
 
 export const EmployeeForm: React.FC<{employee: Employee, benefitCostPreview: number}> = ({employee: initialEmployee, benefitCostPreview}) => {
     const [employee, setEmployee] = useState({...initialEmployee});
+    const [errors, setErrors] = useState({} as any);
 
     const handleEmployeeChange = (event: ChangeEvent<HTMLInputElement>) => {
         const {name, value} = event.target;
+
+        resetErrors(name, value);
 
         setEmployee(previousEmployee => ({
             ...previousEmployee,
@@ -21,6 +24,8 @@ export const EmployeeForm: React.FC<{employee: Employee, benefitCostPreview: num
 
     const handleDependentChange = (event: ChangeEvent<HTMLInputElement>, index: number) => {
         const {name, value} = event.target;
+
+        resetErrors(`dependent${index}${name[0].toUpperCase() + name.substring(1)}`, value);
 
         setEmployee(previousEmployee => {
             const numberOfDependents = previousEmployee.dependents.length;
@@ -44,13 +49,40 @@ export const EmployeeForm: React.FC<{employee: Employee, benefitCostPreview: num
         });
     }
 
+    const formIsValid = () => {
+        const currentErrors: any = {};
+        if(employee.firstName === "") currentErrors.firstName = true;
+        if(employee.lastName === "") currentErrors.lastName = true;
+        employee.dependents.forEach((dependent, index) => {
+            if(dependent.firstName === "") currentErrors[`dependent${index}FirstName`] = true;
+            if(dependent.lastName === "") currentErrors[`dependent${index}LastName`] = true;
+        });
+
+        setErrors(currentErrors);
+
+        return Object.keys(currentErrors).length === 0;
+    }
+
+    const resetErrors = (name: string, value: string) => {
+        if(value !== "") setErrors((previousErrors: any) => {
+            const newErrors = {...previousErrors};
+            delete newErrors[name];
+            return newErrors;
+        });
+    }
+
+    const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
+        if(!formIsValid()) return;
+    }
+
 
     return (
-    <form noValidate autoComplete="off">
+    <form noValidate autoComplete="off" onSubmit={handleSubmit}>
         <h2>New Employee</h2>
         <div className="employeeInfo">
-            <TextField inputProps={{"data-testid": "firstName"}} name="firstName" label="First Name" onChange={handleEmployeeChange} value={employee.firstName} />
-            <TextField inputProps={{"data-testid": "lastName"}} name="lastName" label="Last Name" onChange={handleEmployeeChange} value={employee.lastName}/>
+            <TextField error={errors.firstName} inputProps={{"data-testid": "firstName"}} name="firstName" label="First Name" onChange={handleEmployeeChange} value={employee.firstName} />
+            <TextField error={errors.lastName} inputProps={{"data-testid": "lastName"}} name="lastName" label="Last Name" onChange={handleEmployeeChange} value={employee.lastName}/>
         </div>
         <br/>
         <TableContainer className="dependentsTable" component={Paper}>
@@ -67,10 +99,10 @@ export const EmployeeForm: React.FC<{employee: Employee, benefitCostPreview: num
                     {employee.dependents.map((dependent, index) => (
                         <TableRow key={index}>
                             <TableCell>
-                                <TextField inputProps={{"data-testid": `dependent${index}FirstName`}} name="firstName" label="First Name" onChange={(e: ChangeEvent<HTMLInputElement>) => handleDependentChange(e, index)} value={dependent.firstName} />
+                                <TextField error={errors[`dependent${index}FirstName`]} inputProps={{"data-testid": `dependent${index}FirstName`}} name="firstName" label="First Name" onChange={(e: ChangeEvent<HTMLInputElement>) => handleDependentChange(e, index)} value={dependent.firstName} />
                             </TableCell>
                             <TableCell>
-                                <TextField inputProps={{"data-testid": `dependent${index}LastName`}} name="lastName" label="Last Name" onChange={(e: ChangeEvent<HTMLInputElement>) => handleDependentChange(e, index)} value={dependent.lastName} />
+                                <TextField error={errors[`dependent${index}LastName`]} inputProps={{"data-testid": `dependent${index}LastName`}} name="lastName" label="Last Name" onChange={(e: ChangeEvent<HTMLInputElement>) => handleDependentChange(e, index)} value={dependent.lastName} />
                             </TableCell>
                         </TableRow>
                     ))}
@@ -88,6 +120,12 @@ export const EmployeeForm: React.FC<{employee: Employee, benefitCostPreview: num
                 <p>Benefit Cost Preview: {`$${benefitCostPreview}`}</p>
             </div>)
         }
+        {
+            Object.keys(errors).length !== 0 &&
+            <div className="error-message">All name fields must be entered to submit.</div>
+        }
+        <br/>
+        <Button variant="contained" name="addEmployee" id="addEmployee" type="submit" color="primary">Submit</Button>
     </form>
 )};
 

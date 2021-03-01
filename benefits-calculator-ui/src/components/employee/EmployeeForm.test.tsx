@@ -3,6 +3,8 @@ import {cleanup, fireEvent, render} from "@testing-library/react";
 import { EmployeeForm } from "./EmployeeForm";
 import Employee from "../../models/Employee";
 import Person from "../../models/Person";
+import { create } from "domain";
+import { isAsExpression } from "typescript";
 
 afterEach(cleanup);
 
@@ -120,6 +122,84 @@ describe('benefits preview', () => {
         
         expect(element).not.toBeInTheDocument();
     });
+});
+
+describe('submitting form', () => {
+    it('should have submit button', () => {
+        const {getByText} = renderEmployeeForm();
+
+        getByText("Submit");
+    });
+
+    it('should display errors on submit if invalid', () => {
+        const invalidEmployee: Employee = {firstName: "A Name", lastName: "", dependents: [
+            {firstName: "", lastName: ""}
+        ]};
+
+        const {getByText, getByTestId, getAllByText} = renderEmployeeForm({employee: invalidEmployee});
+
+        const firstNameInput = getByTestId("firstName") as HTMLInputElement;
+        fireEvent.change(firstNameInput, { target: {value: ""}});
+
+        const submitButton = getByText("Submit");
+        fireEvent.click(submitButton);
+
+        const firstNameLabels = getAllByText("First Name");
+        const lastNameLabels = getAllByText("Last Name");
+
+        
+        firstNameLabels.forEach(label => expect(label).toHaveClass('Mui-error'));
+        lastNameLabels.forEach(label => expect(label).toHaveClass('Mui-error'));
+        getByText("All name fields must be entered to submit.");
+    });
+
+    describe("removing errors", () => {
+        const setup = (testIdToChange: string) => {
+            const {getByText, getByTestId, getAllByText} = renderEmployeeForm({employee: createInitialState()});
+
+            const input = getByTestId(testIdToChange) as HTMLInputElement;
+            fireEvent.change(input, { target: {value: ""}});
+
+            const submitButton = getByText("Submit");
+            fireEvent.click(submitButton);
+
+            fireEvent.change(input, { target: {value: "ok value"}});
+
+            return getAllByText;
+        }
+
+        it("should remove error from employee first name", () => {
+            const getAllByText = setup('firstName');
+            
+            const firstNameLabels = getAllByText("First Name");
+
+            expect(firstNameLabels[0]).not.toHaveClass('.Mui-error');
+        });
+
+        it("should remove error from employee last name", () => {
+            const getAllByText = setup('lastName');
+            
+            const lastNameLabels = getAllByText("Last Name");
+
+            expect(lastNameLabels[0]).not.toHaveClass('.Mui-error');
+        });
+
+        it("should remove error from dependent first name", () => {
+            const getAllByText = setup('dependent0FirstName');
+            
+            const firstNameLabels = getAllByText("First Name");
+
+            expect(firstNameLabels[1]).not.toHaveClass('.Mui-error');
+        });
+
+        it("should remove error from dependent last name", () => {
+            const getAllByText = setup('dependent0LastName');
+            
+            const lastNameLabels = getAllByText("Last Name");
+
+            expect(lastNameLabels[1]).not.toHaveClass('.Mui-error');
+        });
+    })
 });
 
 const createInitialState: () => Employee = () => {
