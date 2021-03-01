@@ -21,9 +21,9 @@ namespace BenefitsCalculatorApi.Controllers
         }
 
         [HttpGet("Employee")]
-        public Task<IEnumerable<Employee>> Get()
+        public async Task<IEnumerable<Employee>> Get()
         {
-            throw new NotImplementedException();
+            return await _employeeRepository.GetEmployees();
         }
     }
 }
