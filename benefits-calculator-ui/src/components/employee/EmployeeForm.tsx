@@ -88,6 +88,7 @@ export const EmployeeForm: React.FC<{employee: Employee, benefitCostPreview: num
                 <p>Benefit Cost Preview: {`$${benefitCostPreview}`}</p>
             </div>)
         }
+        <Button variant="contained" name="addEmployee" id="addEmployee" type="submit" color="primary">Submit</Button>
     </form>
 )};
 
