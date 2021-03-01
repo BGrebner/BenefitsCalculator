@@ -21,12 +21,8 @@ namespace BenefitsCalculatorApi.Database
         {
             using var connection = new SqliteConnection(databaseConfig.Name);
 
-            var table = connection.Query<string>("SELECT name FROM sqlite_master WHERE type='table' AND name = 'Employees';");
-            var tableName = table.FirstOrDefault();
-            if (!string.IsNullOrEmpty(tableName) && tableName == "Employees")
-            return;
-
-            connection.Execute("Create Table Employees (FirstName NVARCHAR(50) NOT NULL LastName NVARCHAR(50) NOT NULL);");
+            connection.Execute("CREATE TABLE IF NOT EXISTS Employees (Id INTEGER PRIMARY KEY, FirstName TEXT NOT NULL, LastName TEXT NOT NULL);");
+            connection.Execute("CREATE TABLE IF NOT EXISTS Dependents (Id INTEGER PRIMARY KEY, FirstName TEXT NOT NULL, LastName TEXT NOT NULL, EmployeeId INTEGER NOT NULL, FOREIGN KEY (EmployeeId) REFERENCES Employees (id) ON DELETE CASCADE ON UPDATE NO ACTION);");
         }
     }
 }
