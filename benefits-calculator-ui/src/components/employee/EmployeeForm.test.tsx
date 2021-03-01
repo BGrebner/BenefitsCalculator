@@ -3,6 +3,7 @@ import {cleanup, fireEvent, render} from "@testing-library/react";
 import { EmployeeForm } from "./EmployeeForm";
 import Employee from "../../models/Employee";
 import Person from "../../models/Person";
+import { create } from "domain";
 
 afterEach(cleanup);
 
@@ -150,6 +151,24 @@ describe('submitting form', () => {
         lastNameLabels.forEach(label => expect(label).toHaveClass('Mui-error'));
         getByText("All name fields must be entered to submit.");
     });
+
+    describe("removing errors", () => {
+        it("should remove error from employee first name", () => {
+            const {getByText, getByTestId} = renderEmployeeForm({employee: createInitialState()});
+
+            const firstNameInput = getByTestId("firstName") as HTMLInputElement;
+            fireEvent.change(firstNameInput, { target: {value: ""}});
+
+            const submitButton = getByText("Submit");
+            fireEvent.click(submitButton);
+
+            fireEvent.change(firstNameInput, { target: {value: "ok value"}});
+
+            const firstNameLabel = getByText("First Name");
+
+            expect(firstNameLabel).not.toHaveClass('.Mui-error');
+        });
+    })
 });
 
 const createInitialState: () => Employee = () => {
