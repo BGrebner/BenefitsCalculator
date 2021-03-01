@@ -18,8 +18,13 @@ namespace BenefitsCalculatorApi.Repositories
     public class EmployeeRepository : IEmployeeRepository
     {
         private readonly DatabaseConfig _config;
+        private readonly IDependentRepository _dependentRepository;
 
-        public EmployeeRepository(DatabaseConfig config) => _config = config;
+        public EmployeeRepository(DatabaseConfig config, IDependentRepository dependentRepository)
+        {
+            _config = config;
+            _dependentRepository = dependentRepository;
+        }
 
         public async Task<IEnumerable<Employee>> GetEmployees()
         {
@@ -32,7 +37,13 @@ namespace BenefitsCalculatorApi.Repositories
         {
             using var connection = new SqliteConnection(_config.Name);
 
-            return await connection.QuerySingleAsync<Employee>("INSERT INTO Employees (FirstName, LastName) OUTPUT INSERTED.I* VALUES (@FirstName, @LastName)", employee);
+            var newEmployee = await connection.QuerySingleAsync<Employee>("INSERT INTO Employees (FirstName, LastName) OUTPUT INSERTED.* VALUES (@FirstName, @LastName)", employee);
+
+            var dependentSaveTasks = employee.Dependents.Select(dependent => _dependentRepository.CreateDependent(dependent, (int)newEmployee.Id));
+
+            newEmployee.Dependents = (await Task.WhenAll(dependentSaveTasks)).ToList();
+
+            return newEmployee;
         }
     }
 }
