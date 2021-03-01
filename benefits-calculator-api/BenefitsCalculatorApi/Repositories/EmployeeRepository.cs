@@ -37,9 +37,9 @@ namespace BenefitsCalculatorApi.Repositories
         {
             using var connection = new SqliteConnection(_config.Name);
 
-            var newEmployee = await connection.QuerySingleAsync<Employee>("INSERT INTO Employees (FirstName, LastName) OUTPUT INSERTED.* VALUES (@FirstName, @LastName)", employee);
+            var newEmployee = await connection.QuerySingleAsync<Employee>("INSERT INTO Employees (FirstName, LastName) VALUES (@FirstName, @LastName); SELECT last_insert_rowid() AS Id, @FirstName AS FirstName, @LastName AS LastName", employee);
 
-            var dependentSaveTasks = employee.Dependents.Select(dependent => _dependentRepository.CreateDependent(dependent, (int)newEmployee.Id));
+            var dependentSaveTasks = employee.Dependents?.Select(dependent => _dependentRepository.CreateDependent(dependent, (int)newEmployee.Id));
 
             newEmployee.Dependents = (await Task.WhenAll(dependentSaveTasks)).ToList();
 

@@ -9,9 +9,9 @@ namespace BenefitsCalculatorApi.Repositories
 {
     public interface IDependentRepository
     {
-        Task<IEnumerable<IPerson>> GetDependents(int employeeId);
+        Task<IEnumerable<Dependent>> GetDependents(int employeeId);
 
-        Task<IPerson> CreateDependent(IPerson dependent, int employeeId);
+        Task<Dependent> CreateDependent(IPerson dependent, int employeeId);
     }
 
     public class DependentRepository : IDependentRepository
@@ -19,18 +19,18 @@ namespace BenefitsCalculatorApi.Repositories
         private readonly DatabaseConfig _config;
         public DependentRepository(DatabaseConfig config) => _config = config;
 
-        public async Task<IPerson> CreateDependent(IPerson dependent, int employeeId)
+        public async Task<Dependent> CreateDependent(IPerson dependent, int employeeId)
         {
             using var connection = new SqliteConnection(_config.Name);
 
-            return await connection.QuerySingleAsync<IPerson>("INSERT INTO Dependents (FirstName, LastName, EmployeeId) OUTPUT INSERTED.* VALUES (@FirstName, @LastName, @EmployeeId)", new { dependent.FirstName, dependent.LastName, employeeId });
+            return await connection.QuerySingleAsync<Dependent>("INSERT INTO Dependents (FirstName, LastName, EmployeeId) VALUES (@FirstName, @LastName, @EmployeeId); SELECT last_insert_rowid() AS Id, @FirstName AS FirstName, @LastName AS LastName", new { FirstName = dependent.FirstName, LastName = dependent.LastName, EmployeeId = employeeId });
         }
 
-        public async Task<IEnumerable<IPerson>> GetDependents(int employeeId)
+        public async Task<IEnumerable<Dependent>> GetDependents(int employeeId)
         {
             using var connection = new SqliteConnection(_config.Name);
 
-            return await connection.QueryAsync<IPerson>("Select Id, FirstName, LastName FROM Depenedents WHERE EmployeeId = @EmployeeId;", employeeId);
+            return await connection.QueryAsync<Dependent>("Select Id, FirstName, LastName FROM Depenedents WHERE EmployeeId = @EmployeeId;", employeeId);
         }
     }
 }
