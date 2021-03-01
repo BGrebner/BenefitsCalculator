@@ -122,6 +122,14 @@ describe('benefits preview', () => {
     });
 });
 
+describe('submitting form', () => {
+    it('should have submit button', () => {
+        const {getByText} = renderEmployeeForm();
+
+        getByText("Submit");
+    });
+});
+
 const createInitialState: () => Employee = () => {
     const dependents: Array<Person> = [
         {firstName: "Luke", lastName: "Skywalker"},
