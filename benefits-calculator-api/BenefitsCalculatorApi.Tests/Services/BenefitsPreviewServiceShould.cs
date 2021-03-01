@@ -41,5 +41,22 @@ namespace BenefitsCalculatorApi.Tests.Services
 
             actualCost.Should().Be(900);
         }
+
+        [Fact]
+        public void CalculateStandardDependentCostBasedWhenNotBeginningWithA()
+        {
+            var employee = new Employee {
+                FirstName = "Darth",
+                LastName = "Vader",
+                Dependents = new List<Dependent>() 
+            };
+
+            employee.Dependents.Add(new Dependent { FirstName = "Leia", LastName = "Organa" });
+            employee.Dependents.Add(new Dependent { FirstName = "Luke", LastName = "Skywalker" });
+
+            var actualCost = benefitsPreviewService.CalculateBenefitsCost(employee);
+
+            actualCost.Should().Be(2000);
+        }
     }
 }
