@@ -128,6 +128,29 @@ describe('submitting form', () => {
 
         getByText("Submit");
     });
+
+    it('should display errors on submit if invalid', () => {
+        const invalidEmployee: Employee = {firstName: "", lastName: "", dependents: [
+            {firstName: "", lastName: ""}
+        ]};
+
+        const {getByText, getByTestId} = renderEmployeeForm({employee: invalidEmployee});
+
+        const firstNameInput = getByTestId("firstName") as HTMLInputElement;
+        const lastNameInput = getByTestId("lastName") as HTMLInputElement;
+        const dependentFirstNameInput = getByTestId("dependent0FirstName") as HTMLInputElement;
+        const dependentLastNameInput = getByTestId("dependent0LastName") as HTMLInputElement;
+
+        const submitButton = getByText("Submit");
+        fireEvent.click(submitButton);
+
+        
+        expect(firstNameInput).toHaveAttribute("error");
+        expect(lastNameInput).toHaveAttribute("error");
+        expect(dependentFirstNameInput).toHaveAttribute("error");
+        expect(dependentLastNameInput).toHaveAttribute("error");
+        getByText("All name fields must be entered to submit.");
+    });
 });
 
 const createInitialState: () => Employee = () => {
