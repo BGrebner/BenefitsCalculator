@@ -1,15 +1,23 @@
 import { Button, TextField, Table, TableContainer, TableBody, TableRow, TableCell, TableHead } from "@material-ui/core";
 import { Paper } from '@material-ui/core';
-import React, { ChangeEvent, FormEvent, useState } from "react";
+import React, { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import { connect } from "react-redux";
 import Employee from "../../models/Employee";
 import Person from "../../models/Person";
+import {createEmployee} from "../../redux/actions/employeeActions";
 import "./employeeForm.css";
+import {loadBenefitsPreview} from "../../redux/actions/benefitsPreviewActions";
+import BenefitsPreview from "../../models/BenefitsPreview";
 
 
-export const EmployeeForm: React.FC<{employee: Employee, benefitCostPreview: number}> = ({employee: initialEmployee, benefitCostPreview}) => {
+export const EmployeeForm: React.FC<{employee: Employee, benefitCostPreview: BenefitsPreview, history: any, loadBenefitsPreview: Function, createEmployee: Function}> = 
+    ({employee: initialEmployee, benefitCostPreview, history, loadBenefitsPreview, createEmployee}) => {
     const [employee, setEmployee] = useState({...initialEmployee});
     const [errors, setErrors] = useState({} as any);
+
+    useEffect(() => {
+        if(formIsValid(false)) loadBenefitsPreview(employee);
+    }, [employee]);
 
     const handleEmployeeChange = (event: ChangeEvent<HTMLInputElement>) => {
         const {name, value} = event.target;
@@ -37,6 +45,8 @@ export const EmployeeForm: React.FC<{employee: Employee, benefitCostPreview: num
                 dependents: newDependents
             });
         });
+
+        
     }
 
     const handleAddDependent = () => {
@@ -49,7 +59,7 @@ export const EmployeeForm: React.FC<{employee: Employee, benefitCostPreview: num
         });
     }
 
-    const formIsValid = () => {
+    const formIsValid = (highlightErrors: boolean) => {
         const currentErrors: any = {};
         if(employee.firstName === "") currentErrors.firstName = true;
         if(employee.lastName === "") currentErrors.lastName = true;
@@ -58,7 +68,7 @@ export const EmployeeForm: React.FC<{employee: Employee, benefitCostPreview: num
             if(dependent.lastName === "") currentErrors[`dependent${index}LastName`] = true;
         });
 
-        setErrors(currentErrors);
+        if (highlightErrors) setErrors(currentErrors);
 
         return Object.keys(currentErrors).length === 0;
     }
@@ -73,7 +83,9 @@ export const EmployeeForm: React.FC<{employee: Employee, benefitCostPreview: num
 
     const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        if(!formIsValid()) return;
+        if(!formIsValid(true)) return;
+        
+        createEmployee(employee).then(() => history.push("/"));
     }
 
 
@@ -115,9 +127,9 @@ export const EmployeeForm: React.FC<{employee: Employee, benefitCostPreview: num
         </TableContainer>
 
         {
-            benefitCostPreview > 0 &&
+            benefitCostPreview.yearlyBenefitCost > 0 &&
             (<div id="benefitPreview">
-                <p>Benefit Cost Preview: {`$${benefitCostPreview}`}</p>
+                <p>Benefit Cost Preview: {`$${benefitCostPreview.yearlyBenefitCost}`}</p>
             </div>)
         }
         {
@@ -136,8 +148,13 @@ function mapStateToProps(state: any) {
             lastName: "",
             dependents: [] as Array<Person>
         },
-        benefitCostPreview: 0
+        benefitCostPreview: state.benefitsPreview
     }
 }
 
-export default connect(mapStateToProps)(EmployeeForm);
+const mapDispatchToProps = {
+    createEmployee,
+    loadBenefitsPreview
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(EmployeeForm);

@@ -1,13 +1,22 @@
 import { Button, TableContainer, TableBody, TableRow, TableCell, Table, TableHead, IconButton } from "@material-ui/core";
 import { Paper } from '@material-ui/core';
 import { Contacts } from "@material-ui/icons";
-import React from "react";
+import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 import Employee from "../../models/Employee";
 import "./employeeList.css";
+import {loadEmployees} from "../../redux/actions/employeeActions";
+import { connect } from "react-redux";
 
 
-const EmployeeList: React.FC<{employees: Array<Employee>}> = ({employees}) => (
+const EmployeeList: React.FC<{employees: Array<Employee>, loadEmployees: Function}> = ({employees, loadEmployees}) => {
+    useEffect(() => {
+        if(employees.length === 0) {
+            loadEmployees();
+        }
+    }, [employees.length]);
+
+    return (
     <div>
         <h1 className="centered">Employees</h1>
         <TableContainer className="employeeListTable" component={Paper}>
@@ -39,6 +48,13 @@ const EmployeeList: React.FC<{employees: Array<Employee>}> = ({employees}) => (
             <Button className="float-right" variant="contained" color="primary">Add Employee</Button>
         </Link>                    
     </div>
-);
+)};
 
-export default EmployeeList;
+function mapStateToProps(state: any) {
+    return { employees: state.employees };
+}
+
+const mapDispatchToProps = {
+    loadEmployees
+};
+export default connect(mapStateToProps, mapDispatchToProps)(EmployeeList);
