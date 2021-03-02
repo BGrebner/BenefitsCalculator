@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace BenefitsCalculatorApi.Models
 {
-    public class BenefitPreview
+    public class BenefitsPreview
     {
         public decimal PaycheckSalary { get; set; } = 2000;
         public decimal YearlyBenefitCost { get; set; }

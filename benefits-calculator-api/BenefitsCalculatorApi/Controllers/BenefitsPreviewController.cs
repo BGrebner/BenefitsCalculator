@@ -13,9 +13,13 @@ namespace BenefitsCalculatorApi.Controllers
         public BenefitsPreviewController(IBenefitsPreviewService benefitsPreviewService) => _benefitsPreviewService = benefitsPreviewService;
 
         [HttpPost("BenefitsPreview")]
-        public BenefitPreview GetBenefitPreview(Employee employee)
+        public BenefitsPreview GetBenefitPreview(Employee employee)
         {
-            throw new NotImplementedException();
+            var benefitsPreview = new BenefitsPreview();
+
+            benefitsPreview.YearlyBenefitCost = _benefitsPreviewService.CalculateBenefitsCost(employee);
+
+            return benefitsPreview;
         }
     }
 }
