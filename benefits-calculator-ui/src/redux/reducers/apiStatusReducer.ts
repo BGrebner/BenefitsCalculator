@@ -1,5 +1,4 @@
 import * as types from "../actions/actionTypes";
-
 function actionTypeEndsInSuccess(type: string) {
   return type.substring(type.length - 8) === "_SUCCESS";
 }

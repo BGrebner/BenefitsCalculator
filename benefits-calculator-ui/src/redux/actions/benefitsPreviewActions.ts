@@ -4,8 +4,8 @@ import { beginApiCall, apiCallError } from "./apiStatusActions";
 import BenefitsPreview from "../../models/BenefitsPreview";
 import Employee from "../../models/Employee";
 
-export function loadBenefitsPreviewSuccess(benefits: BenefitsPreview) {
-    return {type: types.LOAD_BENEFITS_PREVIEW_SUCCESS, benefits}
+export function loadBenefitsPreviewSuccess(benefitsPreview: BenefitsPreview) {
+    return {type: types.LOAD_BENEFITS_PREVIEW_SUCCESS, benefitsPreview}
 }
 
 export function loadBenefitsPreview(employee: Employee){

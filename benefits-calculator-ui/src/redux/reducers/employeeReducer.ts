@@ -6,5 +6,7 @@ export default function employeeReducer(state = [], action: any) {
             return action.employees;
         case types.CREATE_EMPLOYEE_SUCCESS:
             return [...state, { ...action.employee }];
+        default:
+            return state;
     }
 }

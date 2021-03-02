@@ -15,7 +15,7 @@ export function loadEmployees() {
     return function(dispatch: any) {
         dispatch(beginApiCall());
         return employeeApi.getEmployees().then(
-            employees => { dispatch(loadEmployeesSuccess(employees))}
+            employees => dispatch(loadEmployeesSuccess(employees))
         ).catch(error => {
             dispatch(apiCallError());
             throw error;

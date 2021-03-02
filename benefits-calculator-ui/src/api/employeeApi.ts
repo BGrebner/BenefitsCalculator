@@ -1,17 +1,17 @@
 import Employee from "../models/Employee";
 import { handleResponse, handleError } from "./apiUtils";
-const baseUrl = process.env.API_URL + "/employee/";
+const baseUrl = new URL("employee", process.env.REACT_APP_API_URL);
 
-export function getEmployees() {
-  return fetch(baseUrl)
+export function getEmployees(): Promise<Array<Employee>> {
+  return fetch(baseUrl.href)
     .then(handleResponse)
     .catch(handleError);
 }
 
-export function saveEmployee(employee: Employee) {
-    return fetch((baseUrl), {
+export function saveEmployee(employee: Employee): Promise<Employee> {
+    return fetch(baseUrl.href, {
         method: "POST",
-        headers: { "content-type": "application/json" },
+        headers: { "content-type": "application/json"},
         body: JSON.stringify(employee)
     })
     .then(handleResponse)

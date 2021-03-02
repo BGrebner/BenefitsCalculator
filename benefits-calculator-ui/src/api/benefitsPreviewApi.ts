@@ -1,6 +1,6 @@
 import Employee from "../models/Employee";
 import { handleResponse, handleError } from "./apiUtils";
-const baseUrl = process.env.API_URL + "/BenefitsPreview/";
+const baseUrl = process.env.REACT_APP_API_URL + "/BenefitsPreview/";
 
 export function getBenefitsPreview(employee: Employee) {
   return fetch(baseUrl, {
