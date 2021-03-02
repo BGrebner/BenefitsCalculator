@@ -11,6 +11,8 @@ namespace BenefitsCalculatorApi.Controllers
         private readonly IBenefitsPreviewService _benefitsPreviewService;
 
         public BenefitsPreviewController(IBenefitsPreviewService benefitsPreviewService) => _benefitsPreviewService = benefitsPreviewService;
+
+        [HttpPost("BenefitsPreview")]
         public BenefitPreview GetBenefitPreview(Employee employee)
         {
             throw new NotImplementedException();
