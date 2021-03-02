@@ -21,7 +21,7 @@ namespace BenefitsCalculatorApi.Tests.Services
         [InlineData("Kathryn", "Janeway")]
         [InlineData("Jean Luc", "Picard")]
         [InlineData("James", "Kirk")]
-        public void CalculateStandardEmployeeCostBasedWhenNotBeginningWithA(string firstName, string lastName)
+        public void CalculateStandardEmployeeCostWhenNameNotBeginningWithA(string firstName, string lastName)
         {
             var employee = new Employee { FirstName = firstName, LastName = lastName, Dependents = new List<Dependent>()};
 
@@ -33,7 +33,7 @@ namespace BenefitsCalculatorApi.Tests.Services
         [Theory]
         [InlineData("Jonathan", "Archer")]
         [InlineData("Alexander", "Rozhenko")]
-        public void CalculateDiscountedEmployeeCostBasedBeginningWithA(string firstName, string lastName)
+        public void CalculateDiscountedEmployeeCostWhenNameBeginningWithA(string firstName, string lastName)
         {
             var employee = new Employee { FirstName = firstName, LastName = lastName, Dependents = new List<Dependent>() };
 
@@ -43,7 +43,7 @@ namespace BenefitsCalculatorApi.Tests.Services
         }
 
         [Fact]
-        public void CalculateStandardDependentCostBasedWhenNotBeginningWithA()
+        public void CalculateStandardDependentCostWhenNameNotBeginningWithA()
         {
             var employee = new Employee {
                 FirstName = "Darth",
@@ -57,6 +57,25 @@ namespace BenefitsCalculatorApi.Tests.Services
             var actualCost = benefitsPreviewService.CalculateBenefitsCost(employee);
 
             actualCost.Should().Be(2000);
+        }
+
+        [Fact]
+        public void CalculateDiscountedDependentCostWhenNameBeginningWithA()
+        {
+            var employee = new Employee
+            {
+                FirstName = "Worf",
+                LastName = "Rozhenko",
+                Dependents = new List<Dependent>()
+            };
+
+            employee.Dependents.Add(new Dependent { FirstName = "Alexander", LastName = "Rozhenko" });
+            employee.Dependents.Add(new Dependent { FirstName = "Wesley", LastName = "Crusher" });
+            employee.Dependents.Add(new Dependent { FirstName = "Jonathan", LastName = "Archer" });
+
+            var actualCost = benefitsPreviewService.CalculateBenefitsCost(employee);
+
+            actualCost.Should().Be(2400);
         }
     }
 }
