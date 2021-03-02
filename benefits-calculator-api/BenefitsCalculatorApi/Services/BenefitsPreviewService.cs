@@ -17,7 +17,7 @@ namespace BenefitsCalculatorApi.Services
         public decimal CalculateBenefitsCost(Employee employee)
         {
             return ApplyNameRule(employee.FirstName, employee.LastName, STANDARD_EMPLOYEE_COST) + 
-                employee.Dependents.Select(d => STANDARD_DEPENDENT_COST).Sum();
+                employee.Dependents.Select(d => ApplyNameRule(d.FirstName, d.LastName, STANDARD_DEPENDENT_COST)).Sum();
         }
 
         private decimal ApplyNameRule(string firstName, string lastName, decimal benefitCost) => benefitCost * (NameDiscountApplies(firstName, lastName) ? (decimal).9 : 1);
